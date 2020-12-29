@@ -9,23 +9,31 @@ This repository contains additional data used for the paper:
 
 The data represents narrative networks for both the English (`en`) and
 French (`fr`) language narratives analyzed in the paper. The
-comma-separated value (`.csv`) files `en_retweet_weights.csv` and
+comma-separated value (`.csv`) files `en_influence_network.csv` and
 `en_tweet_time_weight.csv` represent the English narrative network,
 and the correspondingly named files represent the French network.
 
-The files `*_retweet_weights.csv` contain a directed graph whose
+The files `*_influence_network.csv` contain a directed graph whose
 vertices are defined by the Twitter [user
 id](https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/overview/user-object)
-along with a weight determined by the number of times a Twitter user
-(`from` column) retweeted the topic of another Twitter user (`to`
-column).
+along with edge weights determined by the number of times a Twitter
+user (`to` column) retweets another user (`from` column) within the
+corresponding narrative, so that edge direction corresponds to the
+direction of influence. This graph is used as the prior Poisson
+distribution of the influence network, described in the main paper,
+Section *[Methodology:Network
+Discovery](https://doi.org/10.1073/pnas.2011216118)*.
 
 The files `*_tweet_time_weight.csv` contain a list of tweets on the
 narrative by specific Twitter users (`uid` column), [tweet
 id](https://developer.twitter.com/en/docs/twitter-api/v1/data-dictionary/object-model/tweet)
-(`tweet_id`), tweet or retweet time (`tweet_time`) in coordinated universal time
-(UTC), and weight of the tweet (`narrative_weight`) within the narrative
-represented in Fig.&nbsp;2 of the [paper](https://doi.org/10.1073/pnas.2011216118).
+(`tweet_id`), tweet or retweet time (`tweet_time`) in coordinated
+universal time (UTC), and weight of the tweet (`narrative_weight`)
+within the narrative represented in Fig.&nbsp;2 of the [main
+paper](https://doi.org/10.1073/pnas.2011216118). These tweets are the
+observed outcomes used for impact estimation of a specific narrative,
+described in the main paper, Section *[Methodology:Impact
+Estimation](https://doi.org/10.1073/pnas.2011216118)*.
 
 
 ## Data loading with Python `pandas`
@@ -34,7 +42,7 @@ represented in Fig.&nbsp;2 of the [paper](https://doi.org/10.1073/pnas.201121611
 import datetime as dt, pandas as pd
 
 df_graph = pd.read_csv(
-               'en_retweet_weights.csv.zip',
+               'en_influence_network.csv.zip',
                compression='zip',
                index_col=0)
 df_tweets = pd.read_csv(
@@ -51,7 +59,7 @@ df_tweets.sample(5, weights="narrative_weight").to_html(
         escape=False)
 ```
 
-##### `en_retweet_weights.csv`
+##### `en_influence_network.csv`
 
 <table border="1" class="dataframe">
   <thead>
@@ -243,4 +251,5 @@ may violate any copyrights that exist in this work.
 
 
 [![License: CC BY-NC-ND 4.0](https://licensebuttons.net/l/by-nc-nd/4.0/80x15.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+<br />
 [![DOI](https://zenodo.org/badge/322728941.svg)](https://zenodo.org/badge/latestdoi/322728941)
